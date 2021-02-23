@@ -112,8 +112,8 @@ end
 function vRP.getIndexName(item)
     if item ~= nil then
         for k,v in pairs(itemlist) do
-            if v[nome] == item then
-                return v[index]
+            if v.nome == item then
+                return v.index
             end
         end    
     end    
@@ -121,8 +121,8 @@ end
 function vRP.getNameIndex(item)
     if item ~= nil then
         for k,v in pairs(itemlist) do
-            if v[index] == item then
-                return v[nome]
+            if v.index == item then
+                return v.nome
             end
         end    
     end    
@@ -130,8 +130,8 @@ end
 function vRP.getDescIndex(item)
     if item ~= nil then
         for k,v in pairs(itemlist) do
-            if v[index] == item then
-                return v[desc]
+            if v.index == item then
+                return v.desc
             end
         end    
     end    
@@ -139,7 +139,7 @@ end
 function vRP.getIndexBody(item)
     if item ~= nil then
         for k,v in pairs(itemlist) do
-            if v[index] == item then
+            if v.index == item then
                 return k
             end
         end    
@@ -148,7 +148,7 @@ end
 function vRP.getNameBody(item)
     if item ~= nil then
         for k,v in pairs(itemlist) do
-            if v[nome] == item then
+            if v.nome == item then
                 return k
             end
         end    
