@@ -89,7 +89,80 @@ function src.equipList()
 end
 
 
+function src.takeGun(index,amount)
+	local source = source
+	local user_id = vRP.getUserId(source)
+	local rows = vRP.query("skD/returnGun",{weapon = index})
+	if user_id then
+		if vRP.hasPermission(user_id,"admin.permissao") then
+			if rows[1] then
+				if parseInt(rows[1].qtd) > 0 then
+					if vRP.getInventoryWeight(user_id)+vRP.getItemWeight(vRP.getIndexBody(index)) <= vRP.getInventoryMaxWeight(user_id) then
+						vRP.giveInventoryItem(user_id,vRP.getIndexBody(index),parseInt(amount))
+						vRP.execute("skD/updateGun",{qtd = parseInt(rows[1].qtd-amount),weapon = index})
+						TriggerClientEvent("Notify",source,"Você pegou "..amount.."x "..vRP.getNameIndex(index)..".","Concluído","Verde")
+					else
+						TriggerClientEvent("Notify",source,"Sem espaço no inventário.","Impossível","Vermelho")
+					end
+				else
+					TriggerClientEvent("Notify",source,"Sem estoque.","Impossível","Vermelho")
+				end
+			else 
+				if vRP.getInventoryWeight(user_id)+vRP.getItemWeight(vRP.getIndexBody(index)) <= vRP.getInventoryMaxWeight(user_id) then
+					vRP.giveInventoryItem(user_id,vRP.getIndexBody(index),parseInt(amount))
+					TriggerClientEvent("Notify",source,"Você pegou "..amount.."x "..vRP.getNameIndex(index)..".","Concluído","Verde")
+				else
+					TriggerClientEvent("Notify",source,"Sem espaço no inventário.","Impossível","Vermelho")
+				end	
+			end	
+		end
+	end
+end
 
+function src.giveGun(index,amount)
+	local source = source
+	local user_id = vRP.getUserId(source)
+	local rows = vRP.query("skD/returnGun",{weapon = index})
+	if user_id then
+		if rows[1] then
+			if vRP.hasPermission(user_id,"admin.permissao") then
+				if vRP.tryGetInventoryItem(user_id,vRP.getIndexBody(index),amount) then
+					vRP.execute("skD/updateGun",{qtd = parseInt(rows[1].qtd+amount),weapon = index})
+					TriggerClientEvent("Notify",source,"Você devolveu "..amount.."x "..vRP.getNameIndex(index)..".","Concluído","Verde")
+				end					
+			end
+		else 
+			if vRP.tryGetInventoryItem(user_id,vRP.getIndexBody(index),amount) then
+				TriggerClientEvent("Notify",source,"Você devolveu "..amount.."x "..vRP.getNameIndex(index)..".","Concluído","Verde")
+			end					
+		end	
+	end
+end
+
+
+
+function src.buyGun(index,amount)
+	local source = source
+	local user_id = vRP.getUserId(source)
+	local rows = vRP.query("skD/returnGun",{weapon = index})
+	if user_id and rows[1] then
+		if vRP.hasPermission(user_id,"admin.permissao") then
+			if vRP.tryGetInventoryItem(user_id,"dinheirosujo",parseInt(rows[1].price*amount)) then
+				SetTimeout(15000,function()
+					vRP.execute("skD/updateGun",{qtd = parseInt(rows[1].qtd+amount),weapon = index})
+					TriggerClientEvent("Notify",source,"Sua encomenda de "..amount.."x "..vRP.getNameIndex(index).." chegou.","Concluído","Verde")
+				end)
+			elseif vRP.tryFullPayment(user_id,parseInt(rows[1].price*amount)) then
+				SetTimeout(15000,function()
+					vRP.execute("skD/updateGun",{qtd = parseInt(rows[1].qtd+amount),weapon = index})
+					TriggerClientEvent("Notify",source,"Sua encomenda de "..amount.."x "..vRP.getNameIndex(index).." chegou.","Concluído","Verde")
+				end)
+			else
+				TriggerClientEvent("Notify",source,"Você não possui dinheiro para encomendar.","Impossível","Vermelho")		
+			end			
+		end
+	end
+end
 
 
 
