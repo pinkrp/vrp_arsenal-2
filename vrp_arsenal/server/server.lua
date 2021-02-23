@@ -14,37 +14,22 @@ vCLIENT = Tunnel.getInterface("vrp_arsenal")
 
 
 
+vRP.prepare("skD/returnType", "SELECT * FROM skd_arsenal WHERE type=@type")
+vRP.prepare("skD/returnGun", "SELECT * FROM skd_arsenal WHERE weapon=@weapon")
+vRP.prepare("skD/updateGun", "UPDATE skd_arsenal SET qtd=@qtd WHERE weapon=@weapon")
+
+
+
+
+
 local basics = {
-	{"taser",1500},
-	{"cassetete",500},
-	{"lanterna",500},
-	{"colete",500},
-	{"radio",500}
+	"taser",
+	"cassetete",
+	"lanterna",
+	"colete",
+	"radio"
 }
 
-local semi = {
-	{"atifx45",5000},
-	{"glock",5000},
-	{"spas12",5000}
-}
-
-
-local auto = {
-	{"mp5",15000},
-	{"g36c",25000},
-	{"m4a1",25000},
-	{"m4a4",25000},
-}
-
-local ammo = {
-	{"m-atifx45",15},
-	{"m-glock",15},
-	{"m-spas12",20},
-	{"m-mp5",20},
-	{"m-g36c",35},
-	{"m-m4a1",35},
-	{"m-m4a4",35}
-}
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 -- UTILIDADESLIST
@@ -54,8 +39,9 @@ function src.autoList()
 	local user_id = vRP.getUserId(source)
 	if user_id then
 		local itemlist = {}
-		for k,v in pairs(auto) do
-			table.insert(itemlist,{index = v, name = vRP.getNameIndex(v), desc = vRP.getDescIndex(v), img = v})
+		local guns = vRP.query("skD/returnType",{type = "AUTO"})
+		for k,v in pairs(guns) do
+			table.insert(itemlist,{index = guns[k].weapon, name = vRP.getNameIndex(guns[k].weapon), desc = vRP.getDescIndex(guns[k].weapon), qtd = guns[k].qtd, img = guns[k].weapon})
 		end
 		return itemlist
 	end
@@ -67,8 +53,9 @@ function src.semiList()
 	local user_id = vRP.getUserId(source)
 	if user_id then
 		local itemlist = {}
-		for k,v in pairs(semi) do
-			table.insert(itemlist,{index = v, name = vRP.getNameIndex(v), desc = vRP.getDescIndex(v), img = v})
+		local guns = vRP.query("skD/returnType",{type = "SEMI"})
+		for k,v in pairs(guns) do
+			table.insert(itemlist,{index = guns[k].weapon, name = vRP.getNameIndex(guns[k].weapon), desc = vRP.getDescIndex(guns[k].weapon), qtd = guns[k].qtd, img = guns[k].weapon})
 		end
 		return itemlist
 	end
@@ -80,8 +67,9 @@ function src.ammoList()
 	local user_id = vRP.getUserId(source)
 	if user_id then
 		local itemlist = {}
-		for k,v in pairs(ammo) do
-			table.insert(itemlist,{index = v, name = vRP.getNameIndex(v), desc = vRP.getDescIndex(v), img = v})
+		local guns = vRP.query("skD/returnType",{type = "AMMO"})
+		for k,v in pairs(guns) do
+			table.insert(itemlist,{index = guns[k].weapon, name = vRP.getNameIndex(guns[k].weapon), desc = vRP.getDescIndex(guns[k].weapon), qtd = guns[k].qtd, img = guns[k].weapon})
 		end
 		return itemlist
 	end
@@ -99,7 +87,6 @@ function src.equipList()
 		return itemlist
 	end
 end
-
 
 
 
