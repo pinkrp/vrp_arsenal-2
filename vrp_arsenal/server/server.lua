@@ -82,7 +82,7 @@ function src.equipList()
 	if user_id then
 		local itemlist = {}
 		for k,v in pairs(basics) do
-			table.insert(itemlist,{index = v,name = vRP.getNameIndex(v), desc = vRP.getDescIndex(v), img = v})
+			table.insert(itemlist,{index = v, name = vRP.getNameIndex(v), desc = vRP.getDescIndex(v), img = v})
 		end
 		return itemlist
 	end
